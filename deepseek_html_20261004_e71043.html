@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RamzXy - Sign In</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+    overflow: hidden;
+    position: relative;
+    padding: 20px;
+  }
+
+  body::before, body::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    animation: float 8s ease-in-out infinite;
+  }
+  body::before { width: 400px; height: 400px; background: #ff00cc; top: -150px; left: -150px; }
+  body::after { width: 350px; height: 350px; background: #00d4ff; bottom: -120px; right: -120px; animation-delay: 2s; }
+
+  @keyframes float {
+    0%, 100% { transform: translate(0,0); }
+    50% { transform: translate(30px,-30px); }
+  }
+
+  .container {
+    position: relative; z-index: 2;
+    width: 100%; max-width: 420px;
+    padding: 40px 35px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+  }
+
+  .container h1 { text-align: center; color: #fff; font-size: 28px; margin-bottom: 8px; }
+  .container .subtitle { text-align: center; color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 30px; }
+
+  .input-group { position: relative; margin-bottom: 22px; }
+  .input-group input {
+    width: 100%; padding: 15px 45px 15px 18px;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px; color: #fff; font-size: 15px; outline: none;
+    transition: all 0.3s ease;
+  }
+  .input-group input::placeholder { color: rgba(255,255,255,0.45); }
+  .input-group input:focus { border-color: #00d4ff; box-shadow: 0 0 15px rgba(0,212,255,0.3); }
+  .input-group .icon { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.5); }
+
+  .btn-login {
+    width: 100%; padding: 15px; margin-top: 8px;
+    border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #ff00cc, #00d4ff);
+    color: #fff; font-size: 16px; font-weight: 600; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(255,0,204,0.3);
+  }
+  .btn-login:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0,212,255,0.4); }
+
+  .dashboard {
+    display: none;
+    position: relative; z-index: 2;
+    width: 100%; max-width: 700px;
+    padding: 35px 30px;
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+    max-height: 90vh; overflow-y: auto;
+  }
+
+  .dashboard h2 { color: #fff; font-size: 24px; margin-bottom: 5px; }
+  .dashboard .welcome { color: rgba(255,255,255,0.6); font-size: 13px; margin-bottom: 25px; }
+
+  .bot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px; margin-bottom: 25px;
+  }
+
+  .bot-card {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .bot-card::after {
+    content: 'PREMIUM';
+    position: absolute; top: 10px; right: -30px;
+    background: linear-gradient(135deg, #ff00cc, #00d4ff);
+    color: #fff; font-size: 9px; font-weight: 700;
+    padding: 3px 30px; transform: rotate(45deg);
+  }
+  .bot-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255,255,255,0.13);
+    border-color: #00d4ff;
+    box-shadow: 0 10px 25px rgba(0,212,255,0.2);
+  }
+  .bot-card .bot-icon { font-size: 32px; margin-bottom: 12px; display: block; }
+  .bot-card .bot-name { color: #fff; font-size: 16px; font-weight: 600; margin-bottom: 5px; }
+  .bot-card .bot-desc { color: rgba(255,255,255,0.5); font-size: 12px; line-height: 1.4; }
+  .bot-card .bot-status {
+    display: inline-block; margin-top: 10px; padding: 3px 10px;
+    border-radius: 20px; font-size: 10px; font-weight: 600;
+    background: rgba(255,200,0,0.15); color: #ffcc00;
+    border: 1px solid rgba(255,200,0,0.3);
+  }
+
+  .footer { text-align: center; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+  .footer .created { color: #fff; font-size: 14px; font-weight: 600; margin-bottom: 5px; }
+  .footer .created span {
+    background: linear-gradient(135deg, #ff00cc, #00d4ff);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .footer .contact { color: rgba(255,255,255,0.6); font-size: 13px; }
+  .footer .contact strong { color: #00d4ff; }
+
+  .btn-logout {
+    display: block; margin: 20px auto 0; padding: 10px 25px;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 10px;
+    background: transparent; color: rgba(255,255,255,0.7);
+    font-size: 13px; cursor: pointer; transition: all 0.3s ease;
+  }
+  .btn-logout:hover { background: rgba(255,0,204,0.15); border-color: #ff00cc; color: #fff; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    justify-content: center; align-items: center;
+    padding: 20px;
+  }
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    width: 100%; max-width: 420px;
+    padding: 35px 30px;
+    background: linear-gradient(160deg, rgba(48,43,99,0.98), rgba(15,12,41,0.98));
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 24px;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.7), 0 0 40px rgba(255,0,204,0.25);
+    text-align: center;
+    animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popIn {
+    from { opacity: 0; transform: scale(0.85) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal .lock-badge {
+    display: inline-flex; justify-content: center; align-items: center;
+    width: 70px; height: 70px; margin-bottom: 18px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff00cc, #00d4ff);
+    font-size: 32px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow: 0 0 30px rgba(255,0,204,0.5); }
+    50% { box-shadow: 0 0 45px rgba(0,212,255,0.7); }
+  }
+
+  .modal h3 { color: #fff; font-size: 22px; margin-bottom: 8px; }
+  .modal .bot-target {
+    display: inline-block; margin-bottom: 18px;
+    padding: 5px 14px; border-radius: 20px;
+    background: rgba(0,212,255,0.12);
+    border: 1px solid rgba(0,212,255,0.35);
+    color: #00d4ff; font-size: 12px; font-weight: 600;
+  }
+  .modal p { color: rgba(255,255,255,0.75); font-size: 14px; line-height: 1.6; margin-bottom: 22px; }
+  .modal p strong { color: #ff00cc; }
+
+  .contact-box {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    padding: 14px; margin-bottom: 12px;
+    background: rgba(255,255,255,0.07);
+    border: 1px dashed rgba(0,212,255,0.5);
+    border-radius: 14px;
+    color: #fff; font-size: 16px; font-weight: 700; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.3s ease;
+  }
+  .contact-box:hover { background: rgba(0,212,255,0.12); border-color: #00d4ff; }
+
+  .btn-premium {
+    display: block; width: 100%; padding: 15px; margin-bottom: 10px;
+    border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #ff00cc, #00d4ff);
+    color: #fff; font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    cursor: pointer; text-decoration: none;
+    box-shadow: 0 8px 20px rgba(255,0,204,0.3);
+    transition: all 0.3s ease;
+  }
+  .btn-premium:hover { transform: translateY(-2px); box-shadow: 0 12px 25px rgba(0,212,255,0.45); }
+
+  .btn-close-modal {
+    display: block; width: 100%; padding: 12px;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 12px;
+    background: transparent; color: rgba(255,255,255,0.6);
+    font-size: 14px; cursor: pointer; transition: all 0.3s ease;
+  }
+  .btn-close-modal:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+  .toast {
+    position: fixed; bottom: 30px; left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: linear-gradient(135deg, #00ff88, #00d4ff);
+    color: #0f0c29; font-size: 13px; font-weight: 700;
+    padding: 12px 22px; border-radius: 30px;
+    box-shadow: 0 10px 30px rgba(0,212,255,0.4);
+    z-index: 200; opacity: 0;
+    transition: all 0.4s ease; pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+  <!-- LOGIN -->
+  <div class="container" id="loginBox">
+    <h1>Welcome Back</h1>
+    <p class="subtitle">Sign in to continue to RamzXy</p>
+    <form id="loginForm">
+      <div class="input-group">
+        <input type="text" id="username" placeholder="Username / Akun" required>
+        <span class="icon">👤</span>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" placeholder="Password" required>
+        <span class="icon">🔒</span>
+      </div>
+      <button type="submit" class="btn-login">LOGIN</button>
+    </form>
+  </div>
+
+  <!-- BERANDA -->
+  <div class="dashboard" id="dashboardBox">
+    <h2>🤖 Daftar Chat Bot</h2>
+    <p class="welcome">Klik salah satu bot untuk membuka akses premium</p>
+
+    <div class="bot-grid" id="botGrid">
+      <div class="bot-card" data-bot="RamzXy AI">
+        <span class="bot-icon">💬</span>
+        <div class="bot-name">RamzXy AI</div>
+        <div class="bot-desc">Chat bot serba bisa untuk kebutuhan sehari-hari.</div>
+        <span class="bot-status">🔒 PREMIUM</span>
+      </div>
+      <div class="bot-card" data-bot="ArtBot">
+        <span class="bot-icon">🎨</span>
+        <div class="bot-name">ArtBot</div>
+        <div class="bot-desc">Bantu buat ide dan konsep desain kreatif.</div>
+        <span class="bot-status">🔒 PREMIUM</span>
+      </div>
+      <div class="bot-card" data-bot="StudyBot">
+        <span class="bot-icon">📚</span>
+        <div class="bot-name">StudyBot</div>
+        <div class="bot-desc">Teman belajar dan jawab pertanyaan sekolah.</div>
+        <span class="bot-status">🔒 PREMIUM</span>
+      </div>
+      <div class="bot-card" data-bot="CodeBot">
+        <span class="bot-icon">💻</span>
+        <div class="bot-name">CodeBot</div>
+        <div class="bot-desc">Bantu coding, debug, dan belajar programming.</div>
+        <span class="bot-status">🔒 PREMIUM</span>
+      </div>
+      <div class="bot-card" data-bot="MusicBot">
+        <span class="bot-icon">🎵</span>
+        <div class="bot-name">MusicBot</div>
+        <div class="bot-desc">Rekomendasi lagu dan info musik terbaru.</div>
+        <span class="bot-status">🔒 PREMIUM</span>
+      </div>
+      <div class="bot-card" data-bot="TransBot">
+        <span class="bot-icon">🌐</span>
+        <div class="bot-name">TransBot</div>
+        <div class="bot-desc">Terjemah bahasa dengan cepat dan akurat.</div>
+        <span class="bot-status">🔒 PREMIUM</span>
+      </div>
+    </div>
+
+    <div class="footer">
+      <div class="created">Created By <span>RamzXy</span></div>
+      <div class="contact">Hubungi: <strong>62+ 878-5050-4932</strong></div>
+    </div>
+
+    <button class="btn-logout" id="logoutBtn">Logout</button>
+  </div>
+
+  <!-- MODAL PREMIUM -->
+  <div class="modal-overlay" id="premiumModal">
+    <div class="modal">
+      <div class="lock-badge">🔒</div>
+      <h3>Akses Terkunci!</h3>
+      <div class="bot-target" id="botTarget">Bot</div>
+      <p>
+        Bot ini hanya tersedia untuk member <strong>PREMIUM</strong>.<br>
+        Silakan beli Premium atau DM langsung ke nomor di bawah ini untuk mendapatkan akses.
+      </p>
+
+      <div class="contact-box" id="contactBox">
+        <span>📱</span>
+        <span>62+ 878-5050-4932</span>
+        <span>📋</span>
+      </div>
+
+      <a href="https://wa.me/6287850504932?text=Halo%20RamzXy%2C%20saya%20mau%20beli%20Premium%20untuk%20Chat%20Bot"
+         target="_blank"
+         class="btn-premium">
+        💎 BELI PREMIUM SEKARANG
+      </a>
+
+      <button class="btn-close-modal" id="closeModalBtn">Nanti Saja</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">✅ Nomor berhasil dicopy!</div>
+
+<script>
+  // ====== ELEMEN ======
+  var loginBox     = document.getElementById('loginBox');
+  var dashboardBox = document.getElementById('dashboardBox');
+  var loginForm    = document.getElementById('loginForm');
+  var logoutBtn    = document.getElementById('logoutBtn');
+  var premiumModal = document.getElementById('premiumModal');
+  var botTarget    = document.getElementById('botTarget');
+  var contactBox   = document.getElementById('contactBox');
+  var closeModalBtn= document.getElementById('closeModalBtn');
+  var toast        = document.getElementById('toast');
+
+  // ====== LOGIN ======
+  loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var username = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    if (username && password) {
+      loginBox.style.display = 'none';
+      dashboardBox.style.display = 'block';
+    }
+  });
+
+  // ====== LOGOUT ======
+  logoutBtn.addEventListener('click', function() {
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+    dashboardBox.style.display = 'none';
+    loginBox.style.display = 'block';
+    premiumModal.classList.remove('active');
+  });
+
+  // ====== KLIK BOT (pakai event delegation, anti-gagal) ======
+  document.getElementById('botGrid').addEventListener('click', function(e) {
+    var card = e.target.closest('.bot-card');
+    if (!card) return;
+    var botName = card.getAttribute('data-bot');
+    botTarget.textContent = '🤖 ' + botName;
+    premiumModal.classList.add('active');
+  });
+
+  // ====== TUTUP MODAL ======
+  closeModalBtn.addEventListener('click', function() {
+    premiumModal.classList.remove('active');
+  });
+
+  premiumModal.addEventListener('click', function(e) {
+    if (e.target === premiumModal) premiumModal.classList.remove('active');
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') premiumModal.classList.remove('active');
+  });
+
+  // ====== COPY NOMOR ======
+  contactBox.addEventListener('click', function() {
+    var number = '6287850504932';
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(number).then(showToast).catch(function() {
+        fallbackCopy(number);
+      });
+    } else {
+      fallbackCopy(number);
+    }
+  });
+
+  function fallbackCopy(text) {
+    var temp = document.createElement('textarea');
+    temp.value = text;
+    document.body.appendChild(temp);
+    temp.select();
+    try { document.execCommand('copy'); } catch(err) {}
+    document.body.removeChild(temp);
+    showToast();
+  }
+
+  function showToast() {
+    toast.classList.add('show');
+    setTimeout(function() { toast.classList.remove('show'); }, 2000);
+  }
+</script>
+
+</body>
+</html>
